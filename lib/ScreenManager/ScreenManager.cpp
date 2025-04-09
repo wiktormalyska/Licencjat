@@ -3,6 +3,7 @@
 
 U8G2_SH1106_128X64_NONAME_F_HW_I2C ScreenManager::_u8g2 = U8G2_SH1106_128X64_NONAME_F_HW_I2C(U8G2_R0, U8X8_PIN_NONE);
 I2CScanner ScreenManager::_scanner;
+MenuManager ScreenManager::_menuManager;
 
 void ScreenManager::init() {
 
@@ -56,4 +57,8 @@ void ScreenManager::checkScreenConnection() {
       checkScreenConnection();
     }
     Serial.print("Screen detected!");
+}
+
+void ScreenManager::displayMenu() {
+    _menuManager.displayMenu();
 }

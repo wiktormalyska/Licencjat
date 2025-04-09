@@ -20,9 +20,20 @@ void setup() {
     ScreenManager::init();
     Pinouts::init();
 
+    ScreenManager::_state = ScreenManagerState::STARTUP;
     ScreenManager::showStartupScreen();
 }
 
 void loop() {
-    ScreenManager::displayMainScreen();
+    switch (ScreenManager::_state) {
+    case ScreenManagerState::MAIN:
+        ScreenManager::displayMainScreen();
+        if (ButtonsManager::getButtonValue(1)) {
+            ScreenManager::_state = ScreenManagerState::MENU;
+        }
+        break;
+    case ScreenManagerState::MENU:
+        ScreenManager::displayMenu();
+        break;
+
 }

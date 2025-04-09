@@ -1,5 +1,6 @@
 #ifndef MENUMANAGER_H
 #define MENUMANAGER_H
+#include "ScreenManager.h"
 
 enum MenuManagerState
 {
@@ -11,6 +12,7 @@ class MenuManager {
 public:
     static MenuManagerState getMenuState();
     static bool setMenuState(MenuManagerState state);
+    static void displayMenu();
 private:
     static MenuManagerState state;
 };
