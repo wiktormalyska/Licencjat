@@ -2,13 +2,13 @@
 #define SCREENMANAGER_H
 
 #include <U8g2lib.h>
-#include "I2CScanner.h"
+#include <I2CScanner.h>
 #include "SensorsManager.h"
 #include "MenuManager.h"
 
 enum ScreenManagerState {
-    STARTUP, MAIN, MENU
-}
+    SCREEN_STARTUP, SCREEN_MAIN, SCREEN_MENU
+};
 
 class ScreenManager {
 public:

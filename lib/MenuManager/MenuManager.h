@@ -1,6 +1,6 @@
 #ifndef MENUMANAGER_H
 #define MENUMANAGER_H
-#include "ScreenManager.h"
+#include <U8g2lib.h>
 
 enum MenuManagerState
 {
@@ -13,8 +13,11 @@ public:
     static MenuManagerState getMenuState();
     static bool setMenuState(MenuManagerState state);
     static void displayMenu();
-private:
     static MenuManagerState state;
+private:
+    static int menuPosition;
+    static void showMenuSelection(int menuPosition);
+    static void showPumpMenu(int pumpNumber);
 };
 
 #endif
