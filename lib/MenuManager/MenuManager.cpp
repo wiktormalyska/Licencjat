@@ -25,7 +25,7 @@ void MenuManager::displayMenu(){
                 if (menuPosition > 4){
                     menuPosition = 0;
                 }
-            }`
+            }
             showMenuSelection(menuPosition);            
             break;
         case PUMP1:
