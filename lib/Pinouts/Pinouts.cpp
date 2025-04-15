@@ -9,7 +9,7 @@ void Pinouts::init(){
         pinMode(pumpPins[i], OUTPUT);
     }
     for (int i = 0; i < 4; i++) {
-        pinMode(sensorPins[i], INPUT);
+        pinMode(sensorPins[i], INPUT_PULLDOWN);
     }
 }
 

@@ -5,7 +5,7 @@
 
 class SensorsManager {
 public:
-    static float getSensorValue(int sensorIndex);
+    static int getSensorValue(int sensorIndex);
 };
 
 #endif

@@ -3,6 +3,8 @@
 #include <ScreenManager.h>
 
 MenuManagerState MenuManager::state = MENU;
+ButtonsManager MenuManager::_buttonsManager;
+
 int MenuManager::menuPosition = 0;
 bool MenuManager::setMenuState(MenuManagerState state){
     MenuManager::state = state;
@@ -92,7 +94,31 @@ void MenuManager::showMenuSelection(int menuPosition){
 void MenuManager::showPumpMenu(int pumpNumber){
     U8G2_SH1106_128X64_NONAME_F_HW_I2C _u8g2 = ScreenManager::_u8g2;
     _u8g2.clearBuffer();
-    _u8g2.setFont(u8g2_font_helvR14_tf);
-    _u8g2.drawStr(0, 10, "Pump "+pumpNumber);
+    _u8g2.setFont(u8g2_font_5x7_tf);
+    int screenWidth = _u8g2.getWidth();
+
+    char buf[20];
+    snprintf(buf, sizeof(buf), "Pump %d", pumpNumber);
+    drawCenteredText(_u8g2, buf, 10);
+
+    int frameWidth = 100;
+    int frameHeight = 10;
+    int frameX = (screenWidth - 100) / 2;
+    int frameY = 40;
+    _u8g2.drawFrame(frameX, frameY, frameWidth, frameHeight);
+
+    drawCenteredText(_u8g2, "<apply>", 62);
+
     _u8g2.sendBuffer();
+
+    if (_buttonsManager.getButtonValue(1)){
+        MenuManager::state = MENU;
+    }
+}
+
+void MenuManager::drawCenteredText(U8G2_SH1106_128X64_NONAME_F_HW_I2C &u8g2, const char* text, int yPos) {
+    int screenWidth = u8g2.getWidth();
+    int textWidth = u8g2.getStrWidth(text);
+    int xPosition = (screenWidth - textWidth) / 2;
+    u8g2.drawStr(xPosition, yPos, text);
 }
