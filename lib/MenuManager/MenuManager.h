@@ -19,9 +19,12 @@ public:
 private:
     static ButtonsManager _buttonsManager;
     static int menuPosition;
+    static int pumpActivationValues[4];
     static void showMenuSelection(int menuPosition);
     static void showPumpMenu(int pumpNumber);
     static void drawCenteredText(U8G2_SH1106_128X64_NONAME_F_HW_I2C &u8g2, const char* text, int yPos);
+    static void saveActivationValue(int pumpNumber, int value);
+    static int loadActivationValue(int pumpNumber);
 };
 
 #endif

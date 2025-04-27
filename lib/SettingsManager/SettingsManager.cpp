@@ -1,17 +1,14 @@
 #include <SettingsManager.h>
 
-char* SettingsManager::nameSpace = "AutonomicPlantWatering";
+int SettingsManager::pumpActivationValues[MAX_PUMPS] = {50, 50, 50, 50};
 
-Preferences SettingsManager::preferences;
-
-float SettingsManager::readPumpSettings(int pumpNumber){
-    preferences.begin(nameSpace, false);
-    preferences.getInt("pump_"+pumpNumber, 0);
-    preferences.end();
+int SettingsManager::readPumpSettings(int pumpIndex) {
+    return pumpActivationValues[pumpIndex];
 }
 
-void SettingsManager::writePumpSettings(int pumpNumber, float value){
-    preferences.begin(nameSpace, false);
-    preferences.putInt("pump_"+pumpNumber, value);
-    preferences.end();
+void SettingsManager::writePumpSettings(int pumpIndex, int value){
+    if (value < 0 || value > 100) {
+        value = 50;
+    }
+    pumpActivationValues[pumpIndex] = value;
 }

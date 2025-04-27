@@ -1,16 +1,14 @@
 #ifndef SETTINGSMANAGER_H
 #define SETTINGSMANAGER_H
-
+#define MAX_PUMPS 4
 #include <string.h>
-#include <Preferences.h>
 
 class SettingsManager {
-private:
-    static char* nameSpace;
-    static Preferences preferences;
 public:
-    static float readPumpSettings(int pumpNumber);
-    static void writePumpSettings(int pumpNumber, float value);
+    static int readPumpSettings(int pumpIndex);
+    static void writePumpSettings(int pumpIndex, int value);
+private:
+    static int pumpActivationValues[MAX_PUMPS];
 };
 
 #endif

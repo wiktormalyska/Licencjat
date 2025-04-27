@@ -1,11 +1,14 @@
 #include "MenuManager.h"
 #include <ButtonsManager.h>
 #include <ScreenManager.h>
+#include <SensorsManager.h>
+#include <SettingsManager.h>
 
 MenuManagerState MenuManager::state = MENU;
 ButtonsManager MenuManager::_buttonsManager;
-
 int MenuManager::menuPosition = 0;
+int MenuManager::pumpActivationValues[4] = {50, 50, 50, 50};
+
 bool MenuManager::setMenuState(MenuManagerState state){
     MenuManager::state = state;
     return true;
@@ -97,9 +100,34 @@ void MenuManager::showPumpMenu(int pumpNumber){
     _u8g2.setFont(u8g2_font_5x7_tf);
     int screenWidth = _u8g2.getWidth();
 
+    static bool firstEntry = true;
+    static int activationValue = 50;
+    
+    if (firstEntry) {
+        activationValue = loadActivationValue(pumpNumber - 1);
+        firstEntry = false;
+    }
+
+    if (ButtonsManager::getButtonValue(0)){
+        activationValue -= 5;
+        if (activationValue < 0) activationValue = 0;
+    } else if (ButtonsManager::getButtonValue(2)){
+        activationValue += 5;
+        if (activationValue > 100) activationValue = 100;
+    }
+
     char buf[20];
     snprintf(buf, sizeof(buf), "Pump %d", pumpNumber);
     drawCenteredText(_u8g2, buf, 10);
+
+    float sensorValue = SensorsManager::getSensorValue(pumpNumber - 1);
+    char valueBuf[20];
+    snprintf(valueBuf, sizeof(valueBuf), "Value: %.2f", sensorValue);
+    drawCenteredText(_u8g2, valueBuf, 25);
+
+    char activationBuf[20];
+    snprintf(activationBuf, sizeof(activationBuf), "Activation: %d%%", activationValue);
+    drawCenteredText(_u8g2, activationBuf, 35);
 
     int frameWidth = 100;
     int frameHeight = 10;
@@ -107,12 +135,22 @@ void MenuManager::showPumpMenu(int pumpNumber){
     int frameY = 40;
     _u8g2.drawFrame(frameX, frameY, frameWidth, frameHeight);
 
+    int fillWidth = (int)(sensorValue * frameWidth / 100.0);
+    if (fillWidth > frameWidth) fillWidth = frameWidth;
+    if (fillWidth < 0) fillWidth = 0;
+    _u8g2.drawBox(frameX, frameY, fillWidth, frameHeight);
+
+    int markerX = frameX + (int)(activationValue * frameWidth / 100.0);
+    _u8g2.drawLine(markerX, frameY - 2, markerX, frameY + frameHeight + 2);
+
     drawCenteredText(_u8g2, "<apply>", 62);
 
     _u8g2.sendBuffer();
 
     if (_buttonsManager.getButtonValue(1)){
+        saveActivationValue(pumpNumber - 1, activationValue);
         MenuManager::state = MENU;
+        firstEntry = true;
     }
 }
 
@@ -121,4 +159,13 @@ void MenuManager::drawCenteredText(U8G2_SH1106_128X64_NONAME_F_HW_I2C &u8g2, con
     int textWidth = u8g2.getStrWidth(text);
     int xPosition = (screenWidth - textWidth) / 2;
     u8g2.drawStr(xPosition, yPos, text);
+}
+
+void MenuManager::saveActivationValue(int pumpIndex, int value) {
+    SettingsManager::writePumpSettings(pumpIndex, value);
+    pumpActivationValues[pumpIndex] = value;
+}
+
+int MenuManager::loadActivationValue(int pumpIndex) {
+    return SettingsManager::readPumpSettings(pumpIndex);
 }

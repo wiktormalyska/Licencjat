@@ -5,6 +5,7 @@
 #include "ScreenManager.h"
 #include "Pinouts.h"
 #include "ButtonsManager.h"
+#include "SettingsManager.h"
 
 ScreenManager screenManager;
 Pinouts pinouts;
