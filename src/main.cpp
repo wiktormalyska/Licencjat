@@ -6,6 +6,7 @@
 #include "Pinouts.h"
 #include "ButtonsManager.h"
 #include "SettingsManager.h"
+#include "PumpsManager.h"
 
 ScreenManager screenManager;
 Pinouts pinouts;
@@ -25,6 +26,8 @@ void setup() {
     ScreenManager::_state = ScreenManagerState::SCREEN_STARTUP;
     ScreenManager::showStartupScreen();
     ScreenManager::_state = ScreenManagerState::SCREEN_MAIN;
+
+    PumpsManager::init();
 }
 
 void loop() {
@@ -34,6 +37,7 @@ void loop() {
         if (ButtonsManager::getButtonValue(1)) {
             ScreenManager::_state = ScreenManagerState::SCREEN_MENU;
         }
+        PumpsManager::update();
         break;
     case ScreenManagerState::SCREEN_MENU:
         ScreenManager::displayMenu();
